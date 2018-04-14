@@ -54,6 +54,24 @@ float ACylinderPawn::GetOrbitDistance() const
 	return 0.0f;
 }
 
+float ACylinderPawn::GetMinZ() const
+{
+	if( ATownsendGameModeBase* gameMode = ATownsendGameModeBase::GetFrom( GetWorld() ) )
+	{
+		return gameMode->GetCylinderMinZ();
+	}
+	return 0.0f;
+}
+
+float ACylinderPawn::GetMaxZ() const
+{
+	if( ATownsendGameModeBase* gameMode = ATownsendGameModeBase::GetFrom( GetWorld() ) )
+	{
+		return gameMode->GetCylinderMaxZ();
+	}
+	return 0.0f;
+}
+
 void ACylinderPawn::Move( const FVector2D& moveVec )
 {
 	float orbitDistance = GetOrbitDistance();
@@ -64,6 +82,7 @@ void ACylinderPawn::Move( const FVector2D& moveVec )
 
 	FVector loc = GetActorLocation();
 	loc.Z += moveVec.Y;
+	loc.Z = FMath::Clamp( loc.Z, GetMinZ(), GetMaxZ() );
 	UpdateActorLocationFromOrbit( loc );
 }
 

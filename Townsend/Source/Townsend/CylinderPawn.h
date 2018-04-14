@@ -28,6 +28,8 @@ public:
 
 	FVector2D GetPlayerInputMoveVector() const;
 	float GetOrbitDistance() const;
+	float GetMinZ() const;
+	float GetMaxZ() const;
 
 	void Move( const FVector2D& moveVec );
 
