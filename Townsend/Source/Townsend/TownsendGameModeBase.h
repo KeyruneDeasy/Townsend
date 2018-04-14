@@ -13,8 +13,17 @@ UCLASS()
 class TOWNSEND_API ATownsendGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
-	
-	
+
+public:
+	ATownsendGameModeBase()
+		: m_orbitDistance( 500.0f ) {}
+
+	static ATownsendGameModeBase* GetFrom( UWorld* world );
+
+	float GetOrbitDistance() { return m_orbitDistance; }
+
+private:
+
+	float m_orbitDistance;
 	
 };

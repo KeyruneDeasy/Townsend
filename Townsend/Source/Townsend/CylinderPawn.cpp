@@ -1,19 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "CylinderPawn.h"
+#include "TownsendGameModeBase.h"
 
 #define CYLINDERPAWN_AXIS_MOVE_X "MoveX"
 #define CYLINDERPAWN_AXIS_MOVE_Y "MoveY"
 
 // Sets default values
 ACylinderPawn::ACylinderPawn()
+	: m_speed( 10.0f )
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	// TODO: move these
-	m_orbitDistance = 500.f; 
-	m_speed = 10.f;
 }
 
 // Called when the game starts or when spawned
@@ -47,11 +45,21 @@ FVector2D ACylinderPawn::GetPlayerInputMoveVector() const
 	return m_movement;
 }
 
+float ACylinderPawn::GetOrbitDistance() const
+{
+	if( ATownsendGameModeBase* gameMode = ATownsendGameModeBase::GetFrom( GetWorld() ) )
+	{
+		return gameMode->GetOrbitDistance();
+	}
+	return 0.0f;
+}
+
 void ACylinderPawn::Move( const FVector2D& moveVec )
 {
-	if( m_orbitDistance > 0.0f )
+	float orbitDistance = GetOrbitDistance();
+	if( orbitDistance > 0.0f )
 	{
-		m_angle -= moveVec.X / m_orbitDistance;
+		m_angle -= moveVec.X / orbitDistance;
 	}
 
 	FVector loc = GetActorLocation();
@@ -89,10 +97,11 @@ void ACylinderPawn::UpdateActorLocationFromOrbit( FVector& location )
 {
 	FRotator rotation( 0.0f, m_angle * 180.0f / PI, 0.0f );
 
+	float orbitDistance = GetOrbitDistance();
 	float sin, cos;
 	FMath::SinCos( &sin, &cos, m_angle );
-	location.X = m_orbitDistance * cos;
-	location.Y = m_orbitDistance * sin;
+	location.X = orbitDistance * cos;
+	location.Y = orbitDistance * sin;
 
 	SetActorLocationAndRotation(location, rotation);
 }

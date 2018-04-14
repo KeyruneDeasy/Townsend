@@ -27,12 +27,14 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	FVector2D GetPlayerInputMoveVector() const;
+	float GetOrbitDistance() const;
 
 	void Move( const FVector2D& moveVec );
 
 private:
-	float m_orbitDistance;
 	float m_angle;
+
+	UPROPERTY(EditAnywhere)
 	float m_speed;
 
 	FVector2D m_movement;
