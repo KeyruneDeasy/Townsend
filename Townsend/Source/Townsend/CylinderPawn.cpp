@@ -6,6 +6,14 @@
 #define CYLINDERPAWN_AXIS_MOVE_X "MoveX"
 #define CYLINDERPAWN_AXIS_MOVE_Y "MoveY"
 
+FVector ACylinderPawn::CalculateLocationFromOrbit( float distance, float angle, float z )
+{
+	float orbitDistance = distance;
+	float sin, cos;
+	FMath::SinCos( &sin, &cos, angle );
+	return FVector( orbitDistance * cos, orbitDistance * sin, z );
+}
+
 // Sets default values
 ACylinderPawn::ACylinderPawn()
 	: m_speed( 10.0f )
@@ -83,7 +91,7 @@ void ACylinderPawn::Move( const FVector2D& moveVec )
 	FVector loc = GetActorLocation();
 	loc.Z += moveVec.Y;
 	loc.Z = FMath::Clamp( loc.Z, GetMinZ(), GetMaxZ() );
-	UpdateActorLocationFromOrbit( loc );
+	UpdateActorLocationFromOrbit( loc.Z );
 }
 
 void ACylinderPawn::CalculatePlayerInputMoveVector()
@@ -108,19 +116,14 @@ void ACylinderPawn::CalculatePlayerInputMoveVector()
 
 void ACylinderPawn::UpdateActorLocationFromOrbit()
 {
-	FVector location = GetActorLocation();
-	UpdateActorLocationFromOrbit( location );
+	UpdateActorLocationFromOrbit( GetActorLocation().Z );
 }
 
-void ACylinderPawn::UpdateActorLocationFromOrbit( FVector& location )
+void ACylinderPawn::UpdateActorLocationFromOrbit( float z )
 {
 	FRotator rotation( 0.0f, m_angle * 180.0f / PI, 0.0f );
 
-	float orbitDistance = GetOrbitDistance();
-	float sin, cos;
-	FMath::SinCos( &sin, &cos, m_angle );
-	location.X = orbitDistance * cos;
-	location.Y = orbitDistance * sin;
+	FVector location = CalculateLocationFromOrbit( GetOrbitDistance(), m_angle, z );
 
 	SetActorLocationAndRotation(location, rotation);
 }

@@ -12,6 +12,8 @@ class TOWNSEND_API ACylinderPawn : public APawn
 	GENERATED_BODY()
 
 public:
+	static FVector CalculateLocationFromOrbit( float distance, float angle, float z = 0.0f );
+
 	// Sets default values for this pawn's properties
 	ACylinderPawn();
 
@@ -28,6 +30,7 @@ public:
 
 	FVector2D GetPlayerInputMoveVector() const;
 	float GetOrbitDistance() const;
+	float GetOrbitAngle() const { return m_angle; }
 	float GetMinZ() const;
 	float GetMaxZ() const;
 
@@ -43,6 +46,6 @@ private:
 
 	void CalculatePlayerInputMoveVector();
 	void UpdateActorLocationFromOrbit();
-	void UpdateActorLocationFromOrbit( FVector& location );
+	void UpdateActorLocationFromOrbit( float z );
 };
 
