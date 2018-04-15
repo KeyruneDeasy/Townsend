@@ -14,6 +14,37 @@ FVector ACylinderPawn::CalculateLocationFromOrbit( float distance, float angle, 
 	return FVector( orbitDistance * cos, orbitDistance * sin, z );
 }
 
+float ACylinderPawn::CalculateOrbitAngleFromLocation( const FVector& location )
+{
+	return CalculateOrbitAngleFromLocation( location, location.Size() );
+}
+
+float ACylinderPawn::CalculateOrbitAngleFromLocation( const FVector& location, float distance )
+{
+	FVector location2D ( location.X, location.Y, 0.0f );
+	float angle = FMath::Acos( FVector::DotProduct( FVector( 1.0f, 0.0f, 0.0f ), location2D ) / distance );
+	return location.Y > 0.0f ? angle : -angle;
+}
+
+FVector2D ACylinderPawn::Get2DVectorAcrossCylinder( float orbitDistance, float startingAngle, float startingZ, const FVector& destination )
+{
+	float destinationAngle = CalculateOrbitAngleFromLocation( destination, orbitDistance );
+
+	float angleToTraverse = destinationAngle - startingAngle;
+	// Can we go quicker the other way round the cylinder?
+	while( angleToTraverse > PI )
+	{
+		angleToTraverse -= 2 * PI;
+	}
+	while( angleToTraverse < -PI )
+	{
+		angleToTraverse += 2 * PI;
+	}
+
+	// Note: Increasing angle corresponds to a negative X movement, and vice-versa.
+	return FVector2D( -( angleToTraverse * orbitDistance ), destination.Z - startingZ );
+}
+
 // Sets default values
 ACylinderPawn::ACylinderPawn()
 	: m_speed( 10.0f )
@@ -92,6 +123,23 @@ void ACylinderPawn::Move( const FVector2D& moveVec )
 	loc.Z += moveVec.Y;
 	loc.Z = FMath::Clamp( loc.Z, GetMinZ(), GetMaxZ() );
 	UpdateActorLocationFromOrbit( loc.Z );
+}
+
+void ACylinderPawn::MoveTowardsLocation( const FVector& location )
+{
+	FVector myLoc = GetActorLocation();
+	FVector2D travelVector = ACylinderPawn::Get2DVectorAcrossCylinder( GetOrbitDistance(), GetOrbitAngle(), myLoc.Z, location );
+	if( !travelVector.IsZero() )
+	{
+		if( travelVector.SizeSquared() >= FMath::Square( m_speed ) )
+		{
+			// Only move by the appropriate amount according to my speed.
+			travelVector.Normalize();
+			travelVector *= m_speed;
+		}
+
+		Move( travelVector );
+	}
 }
 
 void ACylinderPawn::CalculatePlayerInputMoveVector()

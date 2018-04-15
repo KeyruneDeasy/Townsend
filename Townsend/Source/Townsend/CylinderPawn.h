@@ -13,6 +13,9 @@ class TOWNSEND_API ACylinderPawn : public APawn
 
 public:
 	static FVector CalculateLocationFromOrbit( float distance, float angle, float z = 0.0f );
+	static float CalculateOrbitAngleFromLocation( const FVector& location );
+	static float CalculateOrbitAngleFromLocation( const FVector& location, float distance );
+	static FVector2D Get2DVectorAcrossCylinder( float orbitDistance, float startingAngle, float startingZ, const FVector& destination );
 
 	// Sets default values for this pawn's properties
 	ACylinderPawn();
@@ -31,12 +34,15 @@ public:
 	FVector2D GetPlayerInputMoveVector() const;
 	float GetOrbitDistance() const;
 	float GetOrbitAngle() const { return m_angle; }
+	float GetSpeed() const { return m_speed; }
 	float GetMinZ() const;
 	float GetMaxZ() const;
 
 	void Move( const FVector2D& moveVec );
+	void MoveTowardsLocation( const FVector& location );
 
 private:
+	UPROPERTY(EditAnywhere)
 	float m_angle;
 
 	UPROPERTY(EditAnywhere)
