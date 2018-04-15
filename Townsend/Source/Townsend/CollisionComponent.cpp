@@ -56,6 +56,12 @@ bool UCollisionComponent::CollidingWith( UCollisionComponent& other )
 	return false;
 }
 
+void UCollisionComponent::OnHit( CollisionType otherType )
+{
+	ACylinderPawn* owner = (ACylinderPawn*) GetOwner();
+	owner->OnHit( m_type, otherType );
+}
+
 void UCollisionComponent::BeginPlay()
 {
 	Super::BeginPlay();

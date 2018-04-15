@@ -7,7 +7,6 @@
 #include "CollisionManager.h"
 #include "CollisionComponent.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class TOWNSEND_API UCollisionComponent : public UActorComponent
 {
@@ -19,6 +18,8 @@ public:
 	void GetMinMax( FVector2D& min, FVector2D& max );
 	void GetMinMax_XAsAngle( FVector2D& min, FVector2D& max );
 	bool CollidingWith( UCollisionComponent& other );
+
+	void OnHit( CollisionType otherType );
 
 protected:
 	virtual void BeginPlay() override;

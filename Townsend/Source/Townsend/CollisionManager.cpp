@@ -58,8 +58,14 @@ void CollisionManager::CheckCollisions()
 			if( enemy->CollidingWith( *m_player ) )
 			{
 				playerHit = true;
+				break;
 			}
 		}
+	}
+
+	if( playerHit )
+	{
+		m_player->OnHit( CollisionType::Collision_Enemy );
 	}
 }
 

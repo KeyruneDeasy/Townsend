@@ -3,6 +3,7 @@
 #include "TownsendGameModeBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "TownsendPlayerState.h"
 
 ATownsendGameModeBase* ATownsendGameModeBase::GetFrom( UWorld* world )
 {
@@ -16,6 +17,8 @@ ATownsendGameModeBase::ATownsendGameModeBase()
 	, m_enemySpawnInterval( 5.0f )
 	, m_nextEnemySpawnTime( 5.0f )
 {
+	PlayerStateClass = ATownsendPlayerState::StaticClass();
+
 	PrimaryActorTick.bCanEverTick = true;
 
 	ConstructorHelpers::FClassFinder<AActor> enemyClassFinder(TEXT("/Game/Blueprints/Enemies/HomingEnemy"));

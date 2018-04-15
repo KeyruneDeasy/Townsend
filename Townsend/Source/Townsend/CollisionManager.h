@@ -7,7 +7,7 @@
 class UCollisionComponent;
 
 UENUM()
-enum class CollisionType
+enum class CollisionType : uint8
 {
 	Collision_Player,
 	Collision_Enemy,

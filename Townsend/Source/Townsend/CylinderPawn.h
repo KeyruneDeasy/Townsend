@@ -6,6 +6,10 @@
 #include "GameFramework/Pawn.h"
 #include "CylinderPawn.generated.h"
 
+enum class CollisionType : uint8;
+
+class ATownsendPlayerState;
+
 UCLASS()
 class TOWNSEND_API ACylinderPawn : public APawn
 {
@@ -50,6 +54,8 @@ public:
 	void Move( const FVector2D& moveVec );
 	void MoveTowardsLocation( const FVector& location );
 
+	void OnHit( CollisionType myType, CollisionType otherType );
+
 private:
 	UPROPERTY(EditAnywhere)
 	float m_angle;
@@ -65,5 +71,7 @@ private:
 	void CalculatePlayerInputMoveVector();
 	void UpdateActorLocationFromOrbit();
 	void UpdateActorLocationFromOrbit( float z );
+	void KillPlayer();
+	ATownsendPlayerState* GetPlayerState();
 };
 

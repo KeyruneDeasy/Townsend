@@ -2,6 +2,7 @@
 
 #include "CylinderPawn.h"
 #include "TownsendGameModeBase.h"
+#include "TownsendPlayerState.h"
 
 #define CYLINDERPAWN_AXIS_MOVE_X "MoveX"
 #define CYLINDERPAWN_AXIS_MOVE_Y "MoveY"
@@ -50,25 +51,34 @@ float ACylinderPawn::Calculate2DPlanePositionX( float orbitDistance, float angle
 	return ( 2 * PI - angle ) * orbitDistance;
 }
 
-// Sets default values
 ACylinderPawn::ACylinderPawn()
 	: m_speed( 10.0f )
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
 void ACylinderPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void ACylinderPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if( ATownsendPlayerState* playerState = GetPlayerState() )
+	{
+		if( playerState->IsDead() )
+		{
+			SetActorHiddenInGame( true );
+			return;
+		}
+		else
+		{
+			SetActorHiddenInGame( false );
+		}
+	}
 
 	CalculatePlayerInputMoveVector();
 
@@ -173,6 +183,18 @@ void ACylinderPawn::MoveTowardsLocation( const FVector& location )
 	}
 }
 
+void ACylinderPawn::OnHit( CollisionType myType, CollisionType otherType )
+{
+	switch( myType )
+	{
+	case CollisionType::Collision_Player:
+	{
+		KillPlayer();
+		break;
+	}
+	}
+}
+
 void ACylinderPawn::CalculatePlayerInputMoveVector()
 {
 	if( InputComponent )
@@ -205,4 +227,24 @@ void ACylinderPawn::UpdateActorLocationFromOrbit( float z )
 	FVector location = CalculateLocationFromOrbit( GetOrbitDistance(), m_angle, z );
 
 	SetActorLocationAndRotation(location, rotation);
+}
+
+void ACylinderPawn::KillPlayer()
+{
+	if( ATownsendPlayerState* playerState = GetPlayerState() )
+	{
+		playerState->Kill();
+	}
+}
+
+ATownsendPlayerState* ACylinderPawn::GetPlayerState()
+{
+	if( AController* controller = GetController() )
+	{
+		if( controller->IsPlayerController() )
+		{
+			return (ATownsendPlayerState*) ( controller->PlayerState );
+		}
+	}
+	return NULL;
 }
