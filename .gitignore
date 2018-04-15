@@ -2,6 +2,9 @@ Townsend/.vs/
 Townsend/Binaries/
 Townsend/Intermediate/
 Townsend/Saved/
-Townsend/Content/
 Townsend/Townsend.sln
 Townsend/enc_temp_folder/
+Townsend/Content/Collections/
+Townsend/Content/Developers/
+Townsend/Content/StarterContent/
+Townsend/Content/*.uasset

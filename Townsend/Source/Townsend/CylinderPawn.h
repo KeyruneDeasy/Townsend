@@ -38,6 +38,9 @@ public:
 	float GetMinZ() const;
 	float GetMaxZ() const;
 
+	void SetAngle( float angle );
+	void SetLocation( float angle, float z );
+
 	void Move( const FVector2D& moveVec );
 	void MoveTowardsLocation( const FVector& location );
 
@@ -47,6 +50,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float m_speed;
+
+	UPROPERTY(EditAnywhere)
+	FVector2D m_hitbox;
 
 	FVector2D m_movement;
 

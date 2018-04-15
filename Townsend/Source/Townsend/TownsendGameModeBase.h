@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "CylinderPawn.h"
 #include "TownsendGameModeBase.generated.h"
 
 /**
@@ -15,12 +16,11 @@ class TOWNSEND_API ATownsendGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	ATownsendGameModeBase()
-		: m_orbitDistance( 500.0f )
-		, m_cylinderMinZ( 100.0f )
-		, m_cylinderMaxZ( 700.0f ) {}
-
 	static ATownsendGameModeBase* GetFrom( UWorld* world );
+
+	ATownsendGameModeBase();
+
+	virtual void Tick(float DeltaTime) override;
 
 	float GetOrbitDistance() { return m_orbitDistance; }
 	float GetCylinderMinZ() { return m_cylinderMinZ; }
@@ -31,5 +31,10 @@ private:
 	float m_orbitDistance;
 	float m_cylinderMinZ;
 	float m_cylinderMaxZ;
-	
+
+	float m_enemySpawnInterval;
+	float m_nextEnemySpawnTime;
+	TSubclassOf < ACylinderPawn > m_enemyClass;
+
+	TArray< ACylinderPawn* > m_enemies;
 };

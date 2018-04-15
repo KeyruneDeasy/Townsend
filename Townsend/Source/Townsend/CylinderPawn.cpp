@@ -111,6 +111,18 @@ float ACylinderPawn::GetMaxZ() const
 	return 0.0f;
 }
 
+void ACylinderPawn::SetAngle( float angle )
+{
+	m_angle = angle;
+	UpdateActorLocationFromOrbit();
+}
+
+void ACylinderPawn::SetLocation( float angle, float z )
+{
+	m_angle = angle;
+	UpdateActorLocationFromOrbit( z );
+}
+
 void ACylinderPawn::Move( const FVector2D& moveVec )
 {
 	float orbitDistance = GetOrbitDistance();
