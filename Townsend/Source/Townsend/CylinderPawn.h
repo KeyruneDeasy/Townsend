@@ -16,6 +16,7 @@ public:
 	static float CalculateOrbitAngleFromLocation( const FVector& location );
 	static float CalculateOrbitAngleFromLocation( const FVector& location, float distance );
 	static FVector2D Get2DVectorAcrossCylinder( float orbitDistance, float startingAngle, float startingZ, const FVector& destination );
+	static float Calculate2DPlanePositionX( float orbitDistance, float angle );
 
 	// Sets default values for this pawn's properties
 	ACylinderPawn();
@@ -37,6 +38,11 @@ public:
 	float GetSpeed() const { return m_speed; }
 	float GetMinZ() const;
 	float GetMaxZ() const;
+
+	// If the cylinder's surface is a flat 2D plane, this gives the position of this pawn on that plane.
+	FVector2D Get2DPlanePosition() const;
+	// As above, but the X component is the angle value instead of an absolute distance value.
+	FVector2D Get2DPlanePosition_XAsAngle() const;
 
 	void SetAngle( float angle );
 	void SetLocation( float angle, float z );

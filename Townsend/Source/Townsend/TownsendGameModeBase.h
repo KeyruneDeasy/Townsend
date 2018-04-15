@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "CylinderPawn.h"
+#include "CollisionManager.h"
 #include "TownsendGameModeBase.generated.h"
 
 /**
@@ -26,6 +27,8 @@ public:
 	float GetCylinderMinZ() { return m_cylinderMinZ; }
 	float GetCylinderMaxZ() { return m_cylinderMaxZ; }
 
+	CollisionManager& GetCollisionManager() { return m_collisionManager; }
+
 private:
 
 	float m_orbitDistance;
@@ -36,5 +39,5 @@ private:
 	float m_nextEnemySpawnTime;
 	TSubclassOf < ACylinderPawn > m_enemyClass;
 
-	TArray< ACylinderPawn* > m_enemies;
+	CollisionManager m_collisionManager;
 };

@@ -48,6 +48,8 @@ void ATownsendGameModeBase::Tick( float DeltaTime )
 			enemy->SetLocation( angle, playerLoc.Z );
 		}
 	}
+
+	m_collisionManager.CheckCollisions();
 }
 
 

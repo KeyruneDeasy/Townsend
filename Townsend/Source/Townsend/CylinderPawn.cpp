@@ -45,6 +45,11 @@ FVector2D ACylinderPawn::Get2DVectorAcrossCylinder( float orbitDistance, float s
 	return FVector2D( -( angleToTraverse * orbitDistance ), destination.Z - startingZ );
 }
 
+float ACylinderPawn::Calculate2DPlanePositionX( float orbitDistance, float angle )
+{
+	return ( 2 * PI - angle ) * orbitDistance;
+}
+
 // Sets default values
 ACylinderPawn::ACylinderPawn()
 	: m_speed( 10.0f )
@@ -109,6 +114,20 @@ float ACylinderPawn::GetMaxZ() const
 		return gameMode->GetCylinderMaxZ();
 	}
 	return 0.0f;
+}
+
+FVector2D ACylinderPawn::Get2DPlanePosition() const
+{
+	float x = Calculate2DPlanePositionX( GetOrbitDistance(), GetOrbitAngle() );
+	float z = GetActorLocation().Z;
+	return FVector2D( x, z );
+}
+
+FVector2D ACylinderPawn::Get2DPlanePosition_XAsAngle() const
+{
+	float x = GetOrbitAngle();
+	float z = GetActorLocation().Z;
+	return FVector2D( x, z );
 }
 
 void ACylinderPawn::SetAngle( float angle )
