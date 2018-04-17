@@ -6,6 +6,7 @@
 
 #define CYLINDERPAWN_AXIS_MOVE_X "MoveX"
 #define CYLINDERPAWN_AXIS_MOVE_Y "MoveY"
+#define CYLINDERPAWN_AXIS_SHOOT "Shoot"
 
 FVector ACylinderPawn::CalculateLocationFromOrbit( float distance, float angle, float z )
 {
@@ -53,6 +54,7 @@ float ACylinderPawn::Calculate2DPlanePositionX( float orbitDistance, float angle
 
 ACylinderPawn::ACylinderPawn()
 	: m_speed( 10.0f )
+	, m_shootCooldownTimer( 0.0f )
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -81,8 +83,8 @@ void ACylinderPawn::Tick(float DeltaTime)
 	}
 
 	CalculatePlayerInputMoveVector();
-
 	Move( m_movement * m_speed );
+	ProcessShooting( DeltaTime );
 }
 
 // Called to bind functionality to input
@@ -92,6 +94,7 @@ void ACylinderPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	PlayerInputComponent->BindAxis( CYLINDERPAWN_AXIS_MOVE_X );
 	PlayerInputComponent->BindAxis( CYLINDERPAWN_AXIS_MOVE_Y );
+	PlayerInputComponent->BindAxis( CYLINDERPAWN_AXIS_SHOOT );
 }
 
 FVector2D ACylinderPawn::GetPlayerInputMoveVector() const
@@ -183,6 +186,16 @@ void ACylinderPawn::MoveTowardsLocation( const FVector& location )
 	}
 }
 
+void ACylinderPawn::ShootLeft()
+{
+
+}
+
+void ACylinderPawn::ShootRight()
+{
+
+}
+
 void ACylinderPawn::OnHit( CollisionType myType, CollisionType otherType )
 {
 	switch( myType )
@@ -247,4 +260,36 @@ ATownsendPlayerState* ACylinderPawn::GetPlayerState()
 		}
 	}
 	return NULL;
+}
+
+void ACylinderPawn::ProcessShooting( float dt )
+{
+	if( m_shootCooldownTimer > 0.0f )
+	{
+		m_shootCooldownTimer -= dt;
+	}
+
+	if( m_shootCooldownTimer <= 0.0f && m_fireRate > 0.0f )
+	{
+		float shootAxis = InputComponent->GetAxisValue( CYLINDERPAWN_AXIS_SHOOT );
+
+		// If we're shooting continuously, let the "overflow" time from one cooldown count towards the next.
+		// But if we stop shooting, let the cooldown sit at zero.
+		if( shootAxis == 0.0f )
+		{
+			m_shootCooldownTimer;
+		}
+		else
+		{
+			if( shootAxis > 0.0f )
+			{
+				ShootRight();
+			}
+			else //if( shootAxis < 0.0f )
+			{
+				ShootLeft();
+			}
+			m_shootCooldownTimer += 1.0f / m_fireRate;
+		}
+	}
 }

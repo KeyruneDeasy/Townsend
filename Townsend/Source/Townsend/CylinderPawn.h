@@ -54,6 +54,9 @@ public:
 	void Move( const FVector2D& moveVec );
 	void MoveTowardsLocation( const FVector& location );
 
+	void ShootLeft();
+	void ShootRight();
+
 	void OnHit( CollisionType myType, CollisionType otherType );
 
 private:
@@ -62,6 +65,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float m_speed;
+
+	UPROPERTY(EditAnywhere)
+	float m_fireRate;
 
 	UPROPERTY(EditAnywhere)
 	FVector2D m_hitbox;
@@ -73,5 +79,9 @@ private:
 	void UpdateActorLocationFromOrbit( float z );
 	void KillPlayer();
 	ATownsendPlayerState* GetPlayerState();
+
+	void ProcessShooting( float dt );
+
+	float m_shootCooldownTimer;
 };
 
