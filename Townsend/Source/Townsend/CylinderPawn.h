@@ -42,6 +42,7 @@ public:
 	float GetSpeed() const { return m_speed; }
 	float GetMinZ() const;
 	float GetMaxZ() const;
+	FVector2D GetHeading() const { return m_heading; }
 
 	// If the cylinder's surface is a flat 2D plane, this gives the position of this pawn on that plane.
 	FVector2D Get2DPlanePosition() const;
@@ -50,6 +51,7 @@ public:
 
 	void SetAngle( float angle );
 	void SetLocation( float angle, float z );
+	void SetHeading( const FVector2D& heading ) { m_heading = heading; }
 
 	void Move( const FVector2D& moveVec );
 	void MoveTowardsLocation( const FVector& location );
@@ -74,14 +76,23 @@ private:
 
 	FVector2D m_movement;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf < ACylinderPawn > m_bulletClass;
+
+	FVector2D m_heading;
+
 	void CalculatePlayerInputMoveVector();
 	void UpdateActorLocationFromOrbit();
 	void UpdateActorLocationFromOrbit( float z );
 	void KillPlayer();
 	ATownsendPlayerState* GetPlayerState();
+	void Die() { m_alive = false; }
+	void Shoot( const FVector2D& shootHeading );
 
 	void ProcessShooting( float dt );
 
 	float m_shootCooldownTimer;
+
+	bool m_alive;
 };
 

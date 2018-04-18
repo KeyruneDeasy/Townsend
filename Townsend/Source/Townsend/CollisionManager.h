@@ -11,6 +11,7 @@ enum class CollisionType : uint8
 {
 	Collision_Player,
 	Collision_Enemy,
+	Collision_PlayerBullet,
 
 	Collision_Max
 };
@@ -29,4 +30,5 @@ public:
 private:
 	UCollisionComponent* m_player;
 	TArray< UCollisionComponent* > m_enemies;
+	TArray< UCollisionComponent* > m_playerBullets;
 };

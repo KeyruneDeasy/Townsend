@@ -55,6 +55,7 @@ float ACylinderPawn::Calculate2DPlanePositionX( float orbitDistance, float angle
 ACylinderPawn::ACylinderPawn()
 	: m_speed( 10.0f )
 	, m_shootCooldownTimer( 0.0f )
+	, m_alive( true )
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -68,6 +69,12 @@ void ACylinderPawn::BeginPlay()
 void ACylinderPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if( !m_alive )
+	{
+		Destroy();
+		return;
+	}
 
 	if( ATownsendPlayerState* playerState = GetPlayerState() )
 	{
@@ -188,12 +195,24 @@ void ACylinderPawn::MoveTowardsLocation( const FVector& location )
 
 void ACylinderPawn::ShootLeft()
 {
-
+	Shoot( FVector2D( -1.0f, 0.0f ) );
 }
 
 void ACylinderPawn::ShootRight()
 {
+	Shoot( FVector2D( 1.0f, 0.0f ) );
+}
 
+void ACylinderPawn::Shoot( const FVector2D& shootHeading )
+{
+	if( m_bulletClass )
+	{
+		ACylinderPawn* bullet = (ACylinderPawn*) GetWorld()->SpawnActor( m_bulletClass );
+		bullet->SetLocation( m_angle, GetActorLocation().Z );
+		FRotator rotation( 0.0f, 90.0f, 0.0f );
+		bullet->SetActorRotation( rotation );
+		bullet->SetHeading( shootHeading );
+	}
 }
 
 void ACylinderPawn::OnHit( CollisionType myType, CollisionType otherType )
@@ -203,6 +222,16 @@ void ACylinderPawn::OnHit( CollisionType myType, CollisionType otherType )
 	case CollisionType::Collision_Player:
 	{
 		KillPlayer();
+		break;
+	}
+	case CollisionType::Collision_Enemy:
+	{
+		Die();
+		break;
+	}
+	case CollisionType::Collision_PlayerBullet:
+	{
+		Die();
 		break;
 	}
 	}

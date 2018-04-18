@@ -25,6 +25,11 @@ void CollisionManager::RegisterCollisionComponent( UCollisionComponent* componen
 		m_enemies.Add( component );
 		break;
 	}
+	case CollisionType::Collision_PlayerBullet:
+	{
+		m_playerBullets.Add( component );
+		break;
+	}
 	}
 }
 
@@ -43,6 +48,11 @@ void CollisionManager::UnregisterCollisionComponent( UCollisionComponent* compon
 	case CollisionType::Collision_Enemy:
 	{
 		m_enemies.Remove( component );
+		break;
+	}
+	case CollisionType::Collision_PlayerBullet:
+	{
+		m_playerBullets.Remove( component );
 		break;
 	}
 	}
@@ -66,6 +76,19 @@ void CollisionManager::CheckCollisions()
 	if( playerHit )
 	{
 		m_player->OnHit( CollisionType::Collision_Enemy );
+	}
+
+	for( auto& playerBullet : m_playerBullets )
+	{
+		for( auto& enemy : m_enemies )
+		{
+			if( enemy->CollidingWith( *playerBullet ) )
+			{
+				enemy->OnHit( CollisionType::Collision_PlayerBullet );
+				playerBullet->OnHit( CollisionType::Collision_Enemy );
+				break;
+			}
+		}
 	}
 }
 
