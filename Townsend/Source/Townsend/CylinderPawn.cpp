@@ -8,6 +8,26 @@
 #define CYLINDERPAWN_AXIS_MOVE_Y "MoveY"
 #define CYLINDERPAWN_AXIS_SHOOT "Shoot"
 
+float ACylinderPawn::AngleBetweenVectors( const FVector& a, const FVector& b )
+{
+	return FMath::Acos( FVector::DotProduct( a, b ) / ( a.Size() * b.Size() ) );
+}
+
+float ACylinderPawn::AngleBetweenVectors( const FVector2D& a, const FVector2D& b )
+{
+	return FMath::Acos( FVector2D::DotProduct( a, b ) / ( a.Size() * b.Size() ) );
+}
+
+float ACylinderPawn::AngleBetweenNormalisedVectors( const FVector& a, const FVector& b )
+{
+	return FMath::Acos( FVector::DotProduct( a, b ) );
+}
+
+float ACylinderPawn::AngleBetweenNormalisedVectors( const FVector2D& a, const FVector2D& b )
+{
+	return FMath::Acos( FVector2D::DotProduct( a, b ) );
+}
+
 FVector ACylinderPawn::CalculateLocationFromOrbit( float distance, float angle, float z )
 {
 	float orbitDistance = distance;
@@ -209,9 +229,11 @@ void ACylinderPawn::Shoot( const FVector2D& shootHeading )
 	{
 		ACylinderPawn* bullet = (ACylinderPawn*) GetWorld()->SpawnActor( m_bulletClass );
 		bullet->SetLocation( m_angle, GetActorLocation().Z );
-		FRotator rotation( 0.0f, 90.0f, 0.0f );
-		bullet->SetActorRotation( rotation );
 		bullet->SetHeading( shootHeading );
+
+		float angle = AngleBetweenNormalisedVectors( FVector2D( 1.0f, 0.0f ), shootHeading );
+		FRotator rotation( FMath::RadiansToDegrees( angle ), 270.0f, 0.0f );
+		bullet->SetLocalRotation( rotation );
 	}
 }
 
@@ -265,6 +287,7 @@ void ACylinderPawn::UpdateActorLocationFromOrbit()
 void ACylinderPawn::UpdateActorLocationFromOrbit( float z )
 {
 	FRotator rotation( 0.0f, m_angle * 180.0f / PI, 0.0f );
+	rotation += m_localRotation;
 
 	FVector location = CalculateLocationFromOrbit( GetOrbitDistance(), m_angle, z );
 

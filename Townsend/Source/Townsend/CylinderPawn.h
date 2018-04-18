@@ -16,6 +16,10 @@ class TOWNSEND_API ACylinderPawn : public APawn
 	GENERATED_BODY()
 
 public:
+	static float AngleBetweenVectors( const FVector& a, const FVector& b );
+	static float AngleBetweenVectors( const FVector2D& a, const FVector2D& b );
+	static float AngleBetweenNormalisedVectors( const FVector& a, const FVector& b );
+	static float AngleBetweenNormalisedVectors( const FVector2D& a, const FVector2D& b );
 	static FVector CalculateLocationFromOrbit( float distance, float angle, float z = 0.0f );
 	static float CalculateOrbitAngleFromLocation( const FVector& location );
 	static float CalculateOrbitAngleFromLocation( const FVector& location, float distance );
@@ -29,12 +33,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick( float DeltaTime ) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent ) override;
 
 	FVector2D GetPlayerInputMoveVector() const;
 	float GetOrbitDistance() const;
@@ -52,6 +56,7 @@ public:
 	void SetAngle( float angle );
 	void SetLocation( float angle, float z );
 	void SetHeading( const FVector2D& heading ) { m_heading = heading; }
+	void SetLocalRotation( const FRotator& rotation ) { m_localRotation = rotation; }
 
 	void Move( const FVector2D& moveVec );
 	void MoveTowardsLocation( const FVector& location );
@@ -80,6 +85,7 @@ private:
 	TSubclassOf < ACylinderPawn > m_bulletClass;
 
 	FVector2D m_heading;
+	FRotator m_localRotation;
 
 	void CalculatePlayerInputMoveVector();
 	void UpdateActorLocationFromOrbit();
