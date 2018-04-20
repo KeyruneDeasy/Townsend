@@ -36,7 +36,7 @@ void UChasePlayerCylinderComponent::TickComponent(float DeltaTime, ELevelTick Ti
 		if( APawn* playerPawn = UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) )
 		{
 			FVector playerLoc = playerPawn->GetActorLocation();
-			myPawn->MoveTowardsLocation( playerLoc );
+			myPawn->MoveTowardsLocation( playerLoc, DeltaTime );
 		}
 	}
 }

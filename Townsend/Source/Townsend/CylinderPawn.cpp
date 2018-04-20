@@ -110,7 +110,7 @@ void ACylinderPawn::Tick(float DeltaTime)
 	}
 
 	CalculatePlayerInputMoveVector();
-	Move( m_movement * m_speed );
+	Move( m_movement * m_speed * DeltaTime );
 	ProcessShooting( DeltaTime );
 }
 
@@ -196,17 +196,18 @@ void ACylinderPawn::Move( const FVector2D& moveVec )
 	UpdateActorLocationFromOrbit( loc.Z );
 }
 
-void ACylinderPawn::MoveTowardsLocation( const FVector& location )
+void ACylinderPawn::MoveTowardsLocation( const FVector& location, float dt )
 {
 	FVector myLoc = GetActorLocation();
 	FVector2D travelVector = ACylinderPawn::Get2DVectorAcrossCylinder( GetOrbitDistance(), GetOrbitAngle(), myLoc.Z, location );
 	if( !travelVector.IsZero() )
 	{
-		if( travelVector.SizeSquared() >= FMath::Square( m_speed ) )
+		float maxTravelDistance = m_speed * dt;
+		if( travelVector.SizeSquared() >= FMath::Square( maxTravelDistance ) )
 		{
 			// Only move by the appropriate amount according to my speed.
 			travelVector.Normalize();
-			travelVector *= m_speed;
+			travelVector *= maxTravelDistance;
 		}
 
 		Move( travelVector );

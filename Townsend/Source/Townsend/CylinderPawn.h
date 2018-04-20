@@ -59,7 +59,7 @@ public:
 	void SetLocalRotation( const FRotator& rotation ) { m_localRotation = rotation; }
 
 	void Move( const FVector2D& moveVec );
-	void MoveTowardsLocation( const FVector& location );
+	void MoveTowardsLocation( const FVector& location, float dt );
 
 	void ShootLeft();
 	void ShootRight();
