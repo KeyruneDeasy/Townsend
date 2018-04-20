@@ -2,7 +2,7 @@
 
 #include "TownsendPlayerState.h"
 
-float ATownsendPlayerState::s_respawnTime = 3.5f;
+float ATownsendPlayerState::s_respawnTime = 3.0f;
 float ATownsendPlayerState::s_invulnerabilityTimeAfterRespawn = 2.0f;
 
 ATownsendPlayerState::ATownsendPlayerState()

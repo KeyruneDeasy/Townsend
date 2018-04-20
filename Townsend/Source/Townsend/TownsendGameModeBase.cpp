@@ -4,6 +4,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h"
 #include "TownsendPlayerState.h"
+#include "TownsendPlayerController.h"
 
 ATownsendGameModeBase* ATownsendGameModeBase::GetFrom( UWorld* world )
 {
@@ -18,6 +19,7 @@ ATownsendGameModeBase::ATownsendGameModeBase()
 	, m_nextEnemySpawnTime( 5.0f )
 {
 	PlayerStateClass = ATownsendPlayerState::StaticClass();
+	PlayerControllerClass = ATownsendPlayerController::StaticClass();
 
 	PrimaryActorTick.bCanEverTick = true;
 
