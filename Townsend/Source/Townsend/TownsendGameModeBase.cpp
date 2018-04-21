@@ -24,10 +24,20 @@ ATownsendGameModeBase::ATownsendGameModeBase()
 
 	PrimaryActorTick.bCanEverTick = true;
 
-	ConstructorHelpers::FClassFinder<AActor> enemyClassFinder(TEXT("/Game/Blueprints/Enemies/HomingEnemy"));
-	if (enemyClassFinder.Class != nullptr)
 	{
-		m_enemyClass = enemyClassFinder.Class;
+		ConstructorHelpers::FClassFinder<AActor> classFinder(TEXT("/Game/Blueprints/Enemies/HomingEnemy"));
+		if (classFinder.Class != nullptr)
+		{
+			m_enemyClass = classFinder.Class;
+		}
+	}
+
+	{
+		ConstructorHelpers::FClassFinder<UGameOverMenu> classFinder(TEXT("/Game/Blueprints/GameOverMenu"));
+		if (classFinder.Class != nullptr)
+		{
+			m_gameOverMenuClass = classFinder.Class;
+		}
 	}
 }
 
@@ -35,7 +45,7 @@ void ATownsendGameModeBase::Tick( float DeltaTime )
 {
 	float time = GetGameTimeSinceCreation();
 
-	if( time > m_nextEnemySpawnTime )
+	if( time > m_nextEnemySpawnTime && !m_gameOver )
 	{
 		m_nextEnemySpawnTime += m_enemySpawnInterval;
 		ACylinderPawn* enemy = (ACylinderPawn*) GetWorld()->SpawnActor( m_enemyClass );
@@ -61,7 +71,20 @@ void ATownsendGameModeBase::Tick( float DeltaTime )
 void ATownsendGameModeBase::EndGame()
 {
 	m_gameOver = true;
-	UGameplayStatics::OpenLevel( GetWorld(), "Townsend_MainMenu" );
+	if( !m_gameOverMenu )
+	{
+		if( APlayerController* controller = UGameplayStatics::GetPlayerController( GetWorld(), 0 ) )
+		{
+			m_gameOverMenu = CreateWidget<UGameOverMenu>( controller, m_gameOverMenuClass );
+			if( m_gameOverMenu )
+			{
+				m_gameOverMenu->AddToViewport( 10000 );
+			}
+			controller->bShowMouseCursor = true; 
+			controller->bEnableClickEvents = true; 
+			controller->bEnableMouseOverEvents = true;
+		}
+	}
 }
 
 

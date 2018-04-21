@@ -6,11 +6,11 @@
 #include "GameFramework/GameModeBase.h"
 #include "CylinderPawn.h"
 #include "CollisionManager.h"
+#include "GameOverMenu.h"
 #include "TownsendGameModeBase.generated.h"
 
-/**
- * 
- */
+class UGameOverMenu;
+
 UCLASS()
 class TOWNSEND_API ATownsendGameModeBase : public AGameModeBase
 {
@@ -48,6 +48,8 @@ private:
 
 	uint16 m_currentLives;
 	bool m_gameOver;
+	TSubclassOf < UGameOverMenu > m_gameOverMenuClass;
+	UGameOverMenu* m_gameOverMenu;
 
 	CollisionManager m_collisionManager;
 };
