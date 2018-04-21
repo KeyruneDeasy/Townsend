@@ -1,0 +1,29 @@
+Game Logic:
+MainMenuGameMode
+MainMenuPlayerController
+TownsendGameModeBase
+TownsendPlayerController
+TownsendPlayerState
+
+Actors:
+CylinderPawn - Gives the core functionality of being locked onto the game cylinder
+CylinderOrbitCameraActor - Extends a standard CameraActor to follow the player pawn's orbit around the cylinder
+
+Components:
+BulletComponent - Identifies the owning player of a bullet
+ChasePlayerCylinderComponent - Makes a pawn chase the player pawn
+CollisionComponent - Implements collision detection for a pawn
+CylinderConstantMoveComponent - Makes a pawn move in a continuous straight line
+DestroyTimerComponent - Makes a pawn die after a specified time
+ScoreValueComponent - Awards score when the pawn dies
+
+UI:
+GameOverMenu
+TownsendHUD
+TownsendMainMenu
+
+Misc:
+CollisionManager - Has a pointer to every CollisionComponent and does the necessary collision checks every frame
+
+
+
