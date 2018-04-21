@@ -26,4 +26,16 @@ ESlateVisibility UTownsendHUD::GetRespawnTimerVisibility()
 	return ESlateVisibility::Hidden;
 }
 
+FText UTownsendHUD::GetScore()
+{
+	float scoreF = 0.0f;
+	if( APlayerState* playerState = GetOwningPlayerState() )
+	{
+		scoreF = playerState->Score;
+	}
+	int score = (int) scoreF;
+	FString str = FString::FromInt( score );
+	return FText::FromString( str );
+}
+
 
