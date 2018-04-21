@@ -17,6 +17,7 @@ ATownsendGameModeBase::ATownsendGameModeBase()
 	, m_cylinderMaxZ( 700.0f )
 	, m_enemySpawnInterval( 5.0f )
 	, m_nextEnemySpawnTime( 5.0f )
+	, m_currentLives( 2 )
 {
 	PlayerStateClass = ATownsendPlayerState::StaticClass();
 	PlayerControllerClass = ATownsendPlayerController::StaticClass();
@@ -55,6 +56,12 @@ void ATownsendGameModeBase::Tick( float DeltaTime )
 	}
 
 	m_collisionManager.CheckCollisions();
+}
+
+void ATownsendGameModeBase::EndGame()
+{
+	m_gameOver = true;
+	UGameplayStatics::OpenLevel( GetWorld(), "Townsend_MainMenu" );
 }
 
 

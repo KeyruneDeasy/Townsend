@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TownsendPlayerState.h"
+#include "TownsendGameModeBase.h"
 
 float ATownsendPlayerState::s_respawnTime = 3.0f;
 float ATownsendPlayerState::s_invulnerabilityTimeAfterRespawn = 2.0f;
@@ -17,7 +18,18 @@ void ATownsendPlayerState::Tick( float DeltaTime )
 		m_respawnTimer -= DeltaTime;
 		if( m_respawnTimer <= 0.0f )
 		{
-			Respawn();
+			if( ATownsendGameModeBase* gameMode = ATownsendGameModeBase::GetFrom( GetWorld() ) )
+			{
+				if( gameMode->GetCurrentLives() > 0 )
+				{
+					gameMode->LoseLife();
+					Respawn();
+				}
+				else
+				{
+					gameMode->EndGame();
+				}
+			}
 		}
 	}
 	else

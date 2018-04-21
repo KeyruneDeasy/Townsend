@@ -2,6 +2,7 @@
 
 #include "TownsendHUD.h"
 #include "TownsendPlayerState.h"
+#include "TownsendGameModeBase.h"
 
 FText UTownsendHUD::GetRespawnTime()
 {
@@ -18,10 +19,13 @@ FText UTownsendHUD::GetRespawnTime()
 
 ESlateVisibility UTownsendHUD::GetRespawnTimerVisibility()
 {
-	// Show the timer while the player is dead.
+	// Show the timer while the player is dead, but only if they have lives remaining.
 	if( ATownsendPlayerState* playerState = (ATownsendPlayerState*) GetOwningPlayerState() )
 	{
-		return playerState->IsDead() ? ESlateVisibility::Visible : ESlateVisibility::Hidden;
+		if( ATownsendGameModeBase* gameMode = ATownsendGameModeBase::GetFrom( GetWorld() ) )
+		{
+			return ( playerState->IsDead() && gameMode->GetCurrentLives() > 0 ) ? ESlateVisibility::Visible : ESlateVisibility::Hidden;
+		}
 	}
 	return ESlateVisibility::Hidden;
 }
@@ -36,6 +40,18 @@ FText UTownsendHUD::GetScore()
 	int score = (int) scoreF;
 	FString str = FString::FromInt( score );
 	return FText::FromString( str );
+}
+
+FText UTownsendHUD::GetLives()
+{
+	uint32 lives = 0;
+	if( ATownsendGameModeBase* gameMode = ATownsendGameModeBase::GetFrom( GetWorld() ) )
+	{
+		lives = gameMode->GetCurrentLives();
+	}
+	FString str1 = "Lives: ";
+	FString str2 = FString::FromInt( lives );
+	return FText::FromString( str1 + str2 );
 }
 
 

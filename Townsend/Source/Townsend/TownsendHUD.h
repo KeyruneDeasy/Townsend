@@ -23,4 +23,6 @@ public:
 	UFUNCTION(BlueprintGetter)
 	FText GetScore();
 	
+	UFUNCTION(BlueprintGetter)
+	FText GetLives();
 };

@@ -27,7 +27,14 @@ public:
 	float GetCylinderMinZ() { return m_cylinderMinZ; }
 	float GetCylinderMaxZ() { return m_cylinderMaxZ; }
 
+	uint32 GetCurrentLives() { return m_currentLives; }
+	void GainLife() { ++m_currentLives; }
+	void LoseLife() { --m_currentLives; }
+
 	CollisionManager& GetCollisionManager() { return m_collisionManager; }
+
+	void EndGame();
+	bool GameOver() { return m_gameOver; }
 
 private:
 
@@ -38,6 +45,9 @@ private:
 	float m_enemySpawnInterval;
 	float m_nextEnemySpawnTime;
 	TSubclassOf < ACylinderPawn > m_enemyClass;
+
+	uint16 m_currentLives;
+	bool m_gameOver;
 
 	CollisionManager m_collisionManager;
 };
