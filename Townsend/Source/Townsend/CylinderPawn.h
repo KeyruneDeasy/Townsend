@@ -26,6 +26,9 @@ public:
 	static FVector2D Get2DVectorAcrossCylinder( float orbitDistance, float startingAngle, float startingZ, const FVector& destination );
 	static float Calculate2DPlanePositionX( float orbitDistance, float angle );
 
+	DECLARE_EVENT_OneParam( ACylinderPawn, FDeathEvent, ACylinderPawn* )
+	FDeathEvent& GetDeathEvent() { return DeathEvent; }
+
 	// Sets default values for this pawn's properties
 	ACylinderPawn();
 
@@ -64,9 +67,11 @@ public:
 	void ShootLeft();
 	void ShootRight();
 
-	void OnHit( CollisionType myType, CollisionType otherType );
+	void OnHit( ACylinderPawn* otherPawn );
 
 private:
+	FDeathEvent DeathEvent;
+
 	UPROPERTY(EditAnywhere)
 	float m_angle;
 

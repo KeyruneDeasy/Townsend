@@ -68,14 +68,10 @@ void CollisionManager::CheckCollisions()
 			if( enemy->CollidingWith( *m_player ) )
 			{
 				playerHit = true;
+				m_player->OnHit( (ACylinderPawn*) enemy->GetOwner() );
 				break;
 			}
 		}
-	}
-
-	if( playerHit )
-	{
-		m_player->OnHit( CollisionType::Collision_Enemy );
 	}
 
 	for( auto& playerBullet : m_playerBullets )
@@ -84,8 +80,8 @@ void CollisionManager::CheckCollisions()
 		{
 			if( enemy->CollidingWith( *playerBullet ) )
 			{
-				enemy->OnHit( CollisionType::Collision_PlayerBullet );
-				playerBullet->OnHit( CollisionType::Collision_Enemy );
+				enemy->OnHit( (ACylinderPawn*) playerBullet->GetOwner() );
+				playerBullet->OnHit( (ACylinderPawn*) enemy->GetOwner() );
 				break;
 			}
 		}

@@ -3,6 +3,7 @@
 #include "CylinderPawn.h"
 #include "TownsendGameModeBase.h"
 #include "TownsendPlayerState.h"
+#include "BulletComponent.h"
 
 #define CYLINDERPAWN_AXIS_MOVE_X "MoveX"
 #define CYLINDERPAWN_AXIS_MOVE_Y "MoveY"
@@ -231,6 +232,16 @@ void ACylinderPawn::Shoot( const FVector2D& shootHeading )
 		ACylinderPawn* bullet = (ACylinderPawn*) GetWorld()->SpawnActor( m_bulletClass );
 		bullet->SetLocation( m_angle, GetActorLocation().Z );
 		bullet->SetHeading( shootHeading );
+		if( UBulletComponent* bulletComp = (UBulletComponent*) bullet->FindComponentByClass( UBulletComponent::StaticClass() ) )
+		{
+			if( AController* controller = GetController() )
+			{
+				if( controller->IsPlayerController() )
+				{
+					bulletComp->SetOwningPlayer( (APlayerController*) controller );
+				}
+			}
+		}
 
 		float angle = AngleBetweenNormalisedVectors( FVector2D( 1.0f, 0.0f ), shootHeading );
 		FRotator rotation( FMath::RadiansToDegrees( angle ), 270.0f, 0.0f );
@@ -238,25 +249,16 @@ void ACylinderPawn::Shoot( const FVector2D& shootHeading )
 	}
 }
 
-void ACylinderPawn::OnHit( CollisionType myType, CollisionType otherType )
+void ACylinderPawn::OnHit( ACylinderPawn* otherPawn )
 {
-	switch( myType )
-	{
-	case CollisionType::Collision_Player:
+	GetDeathEvent().Broadcast( otherPawn );
+	if( IsPlayerControlled() )
 	{
 		KillPlayer();
-		break;
 	}
-	case CollisionType::Collision_Enemy:
+	else
 	{
 		Die();
-		break;
-	}
-	case CollisionType::Collision_PlayerBullet:
-	{
-		Die();
-		break;
-	}
 	}
 }
 

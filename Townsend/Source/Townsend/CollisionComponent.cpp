@@ -56,10 +56,10 @@ bool UCollisionComponent::CollidingWith( UCollisionComponent& other )
 	return false;
 }
 
-void UCollisionComponent::OnHit( CollisionType otherType )
+void UCollisionComponent::OnHit( ACylinderPawn* otherPawn )
 {
 	ACylinderPawn* owner = (ACylinderPawn*) GetOwner();
-	owner->OnHit( m_type, otherType );
+	owner->OnHit( otherPawn );
 }
 
 void UCollisionComponent::BeginPlay()
