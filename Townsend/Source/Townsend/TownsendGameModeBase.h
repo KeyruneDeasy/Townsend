@@ -54,6 +54,7 @@ private:
 	float m_cylinderMinZ;
 	float m_cylinderMaxZ;
 
+	float m_minimumEnemySpawnInterval;
 	float m_enemySpawnInterval;
 	float m_nextEnemySpawnTime;
 	TSubclassOf < ACylinderPawn > m_homingEnemyClass;

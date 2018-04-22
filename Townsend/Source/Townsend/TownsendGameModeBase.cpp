@@ -15,6 +15,7 @@ ATownsendGameModeBase::ATownsendGameModeBase()
 	: m_orbitDistance( 500.0f )
 	, m_cylinderMinZ( 100.0f )
 	, m_cylinderMaxZ( 700.0f )
+	, m_minimumEnemySpawnInterval( 0.5f )
 	, m_enemySpawnInterval( 5.0f )
 	, m_nextEnemySpawnTime( 5.0f )
 	, m_currentLives( 2 )
@@ -67,6 +68,7 @@ void ATownsendGameModeBase::Tick( float DeltaTime )
 	if( time > m_nextEnemySpawnTime && !m_gameOver )
 	{
 		m_nextEnemySpawnTime += m_enemySpawnInterval;
+		m_enemySpawnInterval -= 0.1f;
 
 		SpawnEnemyWave();
 	}
