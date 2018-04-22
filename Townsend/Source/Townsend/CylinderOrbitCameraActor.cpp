@@ -28,9 +28,15 @@ void ACylinderOrbitCameraActor::BeginPlay()
 
 	SetActorTickEnabled( true );
 
+	// Ensure that the target actor has done its movement, including its attached components.
 	if( m_target )
 	{
 		AddTickPrerequisiteActor( m_target );
+		const TSet< UActorComponent* >& components = m_target->GetComponents();
+		for( UActorComponent* component : components )
+		{
+			AddTickPrerequisiteComponent( component );
+		}
 	}
 }
 
