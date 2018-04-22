@@ -13,9 +13,9 @@ void UCollisionComponent::GetMinMax( FVector2D& min, FVector2D& max )
 	ACylinderPawn* owner = (ACylinderPawn*) GetOwner();
 	FVector2D pos = owner->Get2DPlanePosition();
 	min.X = pos.X - m_size.X / 2.f;
-	min.Y = pos.Y - m_size.Y / 2.f;
+	min.Y = pos.Y;
 	max.X = pos.X + m_size.X / 2.f;
-	max.Y = pos.Y + m_size.Y / 2.f;
+	max.Y = pos.Y + m_size.Y;
 }
 
 void UCollisionComponent::GetMinMax_XAsAngle( FVector2D& min, FVector2D& max )
@@ -24,9 +24,9 @@ void UCollisionComponent::GetMinMax_XAsAngle( FVector2D& min, FVector2D& max )
 	FVector2D pos = owner->Get2DPlanePosition_XAsAngle();
 	float angleSize = m_size.X / owner->GetOrbitDistance();
 	min.X = pos.X - angleSize / 2.f;
-	min.Y = pos.Y - m_size.Y / 2.f;
+	min.Y = pos.Y;
 	max.X = pos.X + angleSize / 2.f;
-	max.Y = pos.Y + m_size.Y / 2.f;
+	max.Y = pos.Y + m_size.Y;
 }
 
 bool UCollisionComponent::CollidingWith( UCollisionComponent& other )
