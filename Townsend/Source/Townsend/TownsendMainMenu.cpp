@@ -40,6 +40,11 @@ void UTownsendMainMenu::GoToHighScores()
 	}
 }
 
+void UTownsendMainMenu::QuitGame()
+{
+	FGenericPlatformMisc::RequestExit(false  );
+}
+
 void UTownsendMainMenu::HideMouseCursor()
 {
 	if( APlayerController* controller = GetOwningPlayer() )

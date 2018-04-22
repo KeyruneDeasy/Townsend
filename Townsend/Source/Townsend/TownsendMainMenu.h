@@ -21,6 +21,8 @@ protected:
 	void StartGame();
 	UFUNCTION(BlueprintCallable)
 	void GoToHighScores();
+	UFUNCTION(BlueprintCallable)
+	void QuitGame();
 
 private:
 	TSubclassOf < UHighScoreMenu > m_highScoreMenuClass;
