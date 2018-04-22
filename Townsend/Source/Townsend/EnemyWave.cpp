@@ -20,7 +20,7 @@ void EnemyWave::Tick( float dt, UWorld* world )
 		if( timeBefore <= spawn.GetTime() && m_time > spawn.GetTime() )
 		{
 			ACylinderPawn* enemy = (ACylinderPawn*) world->SpawnActor( spawn.GetEnemyClass() );
-			float angle = m_originAngle - spawn.GetPosition().X * enemy->GetOrbitDistance();
+			float angle = m_originAngle - spawn.GetPosition().X / enemy->GetOrbitDistance();
 			enemy->SetLocation( angle, spawn.GetPosition().Y );
 		}
 	}

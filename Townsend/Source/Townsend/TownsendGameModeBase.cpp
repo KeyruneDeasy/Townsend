@@ -33,6 +33,14 @@ ATownsendGameModeBase::ATownsendGameModeBase()
 	}
 
 	{
+		ConstructorHelpers::FClassFinder<AActor> classFinder(TEXT("/Game/Blueprints/Enemies/StraightLineEnemy"));
+		if (classFinder.Class != nullptr)
+		{
+			m_straightEnemyClass = classFinder.Class;
+		}
+	}
+
+	{
 		ConstructorHelpers::FClassFinder<UGameOverMenu> classFinder(TEXT("/Game/Blueprints/GameOverMenu"));
 		if (classFinder.Class != nullptr)
 		{
@@ -60,12 +68,7 @@ void ATownsendGameModeBase::Tick( float DeltaTime )
 	{
 		m_nextEnemySpawnTime += m_enemySpawnInterval;
 
-		if( ACylinderPawn* playerPawn = (ACylinderPawn*) UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) )
-		{
-			float angle = playerPawn->GetOrbitAngle();
-
-			SpawnHomingEnemyWave1( angle );
-		}
+		SpawnEnemyWave();
 	}
 
 	m_collisionManager.CheckCollisions();
@@ -90,17 +93,97 @@ void ATownsendGameModeBase::EndGame()
 	}
 }
 
-void ATownsendGameModeBase::SpawnHomingEnemyWave1( float playerAngle )
+void ATownsendGameModeBase::SpawnEnemyWave()
 {
 	m_waves.AddDefaulted( 1 );
 	EnemyWave& wave = m_waves[m_waves.Num() - 1];
-	wave.SetOriginAngle( playerAngle + PI / 2.f );
 
-	wave.AddSpawn( 0.0f, FVector2D( 0.0f, 100.0f ), m_homingEnemyClass );
-	wave.AddSpawn( 0.2f, FVector2D( 0.0f, 200.0f ), m_homingEnemyClass );
-	wave.AddSpawn( 0.4f, FVector2D( 0.0f, 300.0f ), m_homingEnemyClass );
-	wave.AddSpawn( 0.6f, FVector2D( 0.0f, 400.0f ), m_homingEnemyClass );
-	wave.AddSpawn( 0.8f, FVector2D( 0.0f, 500.0f ), m_homingEnemyClass );
+	float angle = 0.0f;
+	if( ACylinderPawn* playerPawn = (ACylinderPawn*) UGameplayStatics::GetPlayerPawn( GetWorld(), 0 ) )
+	{
+		angle = playerPawn->GetOrbitAngle();
+	}
+
+	float angleOffset = PI / 2.f;
+	int32 rand = FMath::RandRange( 0, 1 );
+	if( rand == 1 ) { angleOffset *= -1.f; }
+	wave.SetOriginAngle( angle + angleOffset );
+
+	rand = FMath::RandRange( 0, ( (int) Wave_Count ) - 1 );
+	switch( (Wave) rand )
+	{
+	case Wave_HomingEnemyLine:
+	{
+		SpawnWaveLine( wave, m_homingEnemyClass );
+		break;
+	}
+	case Wave_HomingEnemyV:
+	{
+		SpawnWaveV( wave, m_homingEnemyClass );
+		break;
+	}
+	case Wave_StraightEnemyLine:
+	{
+		SpawnWaveLine( wave, m_straightEnemyClass );
+		break;
+	}
+	case Wave_StraightEnemyV:
+	{
+		SpawnWaveV( wave, m_straightEnemyClass );
+		break;
+	}
+	case Wave_Diamond:
+	{
+		SpawnWaveDiamond( wave, m_homingEnemyClass, m_straightEnemyClass );
+		break;
+	}
+	}
+}
+
+void ATownsendGameModeBase::SpawnWaveLine( EnemyWave& wave, TSubclassOf<ACylinderPawn>& enemyClass )
+{
+	wave.AddSpawn( 0.0f, FVector2D( 0.0f, 100.0f ), enemyClass );
+	wave.AddSpawn( 0.1f, FVector2D( 0.0f, 150.0f ), enemyClass );
+	wave.AddSpawn( 0.2f, FVector2D( 0.0f, 200.0f ), enemyClass );
+	wave.AddSpawn( 0.3f, FVector2D( 0.0f, 250.0f ), enemyClass );
+	wave.AddSpawn( 0.4f, FVector2D( 0.0f, 300.0f ), enemyClass );
+	wave.AddSpawn( 0.5f, FVector2D( 0.0f, 350.0f ), enemyClass );
+	wave.AddSpawn( 0.6f, FVector2D( 0.0f, 400.0f ), enemyClass );
+	wave.AddSpawn( 0.7f, FVector2D( 0.0f, 450.0f ), enemyClass );
+	wave.AddSpawn( 0.8f, FVector2D( 0.0f, 500.0f ), enemyClass );
+	wave.AddSpawn( 0.9f, FVector2D( 0.0f, 550.0f ), enemyClass );
+}
+
+void ATownsendGameModeBase::SpawnWaveV( EnemyWave& wave, TSubclassOf<ACylinderPawn>& enemyClass )
+{
+	wave.AddSpawn( 0.0f, FVector2D(   0.0f, 400.0f ), enemyClass );
+	wave.AddSpawn( 0.2f, FVector2D(  25.0f, 430.0f ), enemyClass );
+	wave.AddSpawn( 0.2f, FVector2D(  25.0f, 370.0f ), enemyClass );
+	wave.AddSpawn( 0.4f, FVector2D(  50.0f, 460.0f ), enemyClass );
+	wave.AddSpawn( 0.4f, FVector2D(  50.0f, 340.0f ), enemyClass );
+	wave.AddSpawn( 0.6f, FVector2D(  75.0f, 490.0f ), enemyClass );
+	wave.AddSpawn( 0.6f, FVector2D(  75.0f, 310.0f ), enemyClass );
+	wave.AddSpawn( 0.8f, FVector2D( 100.0f, 520.0f ), enemyClass );
+	wave.AddSpawn( 0.8f, FVector2D( 100.0f, 280.0f ), enemyClass );
+	wave.AddSpawn( 1.0f, FVector2D( 125.0f, 550.0f ), enemyClass );
+	wave.AddSpawn( 1.0f, FVector2D( 125.0f, 250.0f ), enemyClass );
+}
+
+void ATownsendGameModeBase::SpawnWaveDiamond( EnemyWave& wave, TSubclassOf<ACylinderPawn>& outerClass, TSubclassOf<ACylinderPawn>& innerClass )
+{
+	wave.AddSpawn( 0.0f, FVector2D(   0.0f, 400.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( 100.0f, 460.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( 100.0f, 340.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( 200.0f, 520.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( 200.0f, 280.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( 300.0f, 580.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( 300.0f, 220.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( 400.0f, 520.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( 400.0f, 280.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( 500.0f, 460.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( 500.0f, 340.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( 600.0f, 400.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( 300.0f, 400.0f ), innerClass );
 }
 
 

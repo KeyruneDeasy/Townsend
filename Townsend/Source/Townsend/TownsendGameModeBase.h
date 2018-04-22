@@ -18,6 +18,17 @@ class TOWNSEND_API ATownsendGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
+	enum Wave
+	{
+		Wave_HomingEnemyLine,
+		Wave_HomingEnemyV,
+		Wave_StraightEnemyLine,
+		Wave_StraightEnemyV,
+		Wave_Diamond,
+
+		Wave_Count
+	};
+
 	static ATownsendGameModeBase* GetFrom( UWorld* world );
 
 	ATownsendGameModeBase();
@@ -46,6 +57,7 @@ private:
 	float m_enemySpawnInterval;
 	float m_nextEnemySpawnTime;
 	TSubclassOf < ACylinderPawn > m_homingEnemyClass;
+	TSubclassOf < ACylinderPawn > m_straightEnemyClass;
 
 	uint16 m_currentLives;
 	bool m_gameOver;
@@ -56,5 +68,9 @@ private:
 
 	TArray< EnemyWave > m_waves;
 
-	void SpawnHomingEnemyWave1( float playerAngle );
+	void SpawnEnemyWave();
+
+	void SpawnWaveLine( EnemyWave& wave, TSubclassOf<ACylinderPawn>& enemyClass );
+	void SpawnWaveV( EnemyWave& wave, TSubclassOf<ACylinderPawn>& enemyClass );
+	void SpawnWaveDiamond( EnemyWave& wave, TSubclassOf<ACylinderPawn>& outerClass, TSubclassOf<ACylinderPawn>& innerClass );
 };
