@@ -17,6 +17,7 @@ UTownsendMainMenu::UTownsendMainMenu( const FObjectInitializer& init )
 
 void UTownsendMainMenu::StartGame()
 {
+	HideMouseCursor();
 	UGameplayStatics::OpenLevel( GetWorld(), "Townsend_Level01" );
 }
 
@@ -36,6 +37,14 @@ void UTownsendMainMenu::GoToHighScores()
 	if( m_highScoreMenu )
 	{
 		m_highScoreMenu->Activate();
+	}
+}
+
+void UTownsendMainMenu::HideMouseCursor()
+{
+	if( APlayerController* controller = GetOwningPlayer() )
+	{
+		controller->bShowMouseCursor = false;
 	}
 }
 

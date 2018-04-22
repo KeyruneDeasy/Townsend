@@ -23,5 +23,8 @@ void AMainMenuPlayerController::BeginPlay()
 	{
 		m_menu->AddToViewport(9999); // Massive render-Z to make it render at the front.
 	}
+	bShowMouseCursor = true; 
+	bEnableClickEvents = true; 
+	bEnableMouseOverEvents = true;
 }
 

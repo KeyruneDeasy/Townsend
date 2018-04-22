@@ -22,6 +22,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void GoToHighScores();
 
+private:
 	TSubclassOf < UHighScoreMenu > m_highScoreMenuClass;
 	UHighScoreMenu* m_highScoreMenu;
+
+	void HideMouseCursor();
 };
