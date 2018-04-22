@@ -7,6 +7,7 @@
 #include "CylinderPawn.h"
 #include "CollisionManager.h"
 #include "GameOverMenu.h"
+#include "EnemyWave.h"
 #include "TownsendGameModeBase.generated.h"
 
 class UGameOverMenu;
@@ -44,7 +45,7 @@ private:
 
 	float m_enemySpawnInterval;
 	float m_nextEnemySpawnTime;
-	TSubclassOf < ACylinderPawn > m_enemyClass;
+	TSubclassOf < ACylinderPawn > m_homingEnemyClass;
 
 	uint16 m_currentLives;
 	bool m_gameOver;
@@ -52,4 +53,8 @@ private:
 	UGameOverMenu* m_gameOverMenu;
 
 	CollisionManager m_collisionManager;
+
+	TArray< EnemyWave > m_waves;
+
+	void SpawnHomingEnemyWave1( float playerAngle );
 };

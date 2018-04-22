@@ -73,6 +73,15 @@ float ACylinderPawn::Calculate2DPlanePositionX( float orbitDistance, float angle
 	return ( 2 * PI - angle ) * orbitDistance;
 }
 
+float ACylinderPawn::GetOrbitDistance( UWorld* world )
+{
+	if( ATownsendGameModeBase* gameMode = ATownsendGameModeBase::GetFrom( world ) )
+	{
+		return gameMode->GetOrbitDistance();
+	}
+	return 0.0f;
+}
+
 ACylinderPawn::ACylinderPawn()
 	: m_alive( true )
 {
@@ -123,11 +132,7 @@ void ACylinderPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 float ACylinderPawn::GetOrbitDistance() const
 {
-	if( ATownsendGameModeBase* gameMode = ATownsendGameModeBase::GetFrom( GetWorld() ) )
-	{
-		return gameMode->GetOrbitDistance();
-	}
-	return 0.0f;
+	return GetOrbitDistance( GetWorld() );
 }
 
 float ACylinderPawn::GetMinZ() const

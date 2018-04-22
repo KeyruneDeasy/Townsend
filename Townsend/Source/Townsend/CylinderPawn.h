@@ -25,6 +25,7 @@ public:
 	static float CalculateOrbitAngleFromLocation( const FVector& location, float distance );
 	static FVector2D Get2DVectorAcrossCylinder( float orbitDistance, float startingAngle, float startingZ, const FVector& destination );
 	static float Calculate2DPlanePositionX( float orbitDistance, float angle );
+	static float GetOrbitDistance( UWorld* world );
 
 	DECLARE_EVENT_OneParam( ACylinderPawn, FDeathEvent, ACylinderPawn* )
 	FDeathEvent& GetDeathEvent() { return DeathEvent; }
