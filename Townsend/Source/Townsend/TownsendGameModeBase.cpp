@@ -156,34 +156,34 @@ void ATownsendGameModeBase::SpawnWaveLine( EnemyWave& wave, TSubclassOf<ACylinde
 
 void ATownsendGameModeBase::SpawnWaveV( EnemyWave& wave, TSubclassOf<ACylinderPawn>& enemyClass )
 {
-	wave.AddSpawn( 0.0f, FVector2D(   0.0f, 400.0f ), enemyClass );
-	wave.AddSpawn( 0.2f, FVector2D(  25.0f, 430.0f ), enemyClass );
-	wave.AddSpawn( 0.2f, FVector2D(  25.0f, 370.0f ), enemyClass );
-	wave.AddSpawn( 0.4f, FVector2D(  50.0f, 460.0f ), enemyClass );
-	wave.AddSpawn( 0.4f, FVector2D(  50.0f, 340.0f ), enemyClass );
-	wave.AddSpawn( 0.6f, FVector2D(  75.0f, 490.0f ), enemyClass );
-	wave.AddSpawn( 0.6f, FVector2D(  75.0f, 310.0f ), enemyClass );
-	wave.AddSpawn( 0.8f, FVector2D( 100.0f, 520.0f ), enemyClass );
-	wave.AddSpawn( 0.8f, FVector2D( 100.0f, 280.0f ), enemyClass );
-	wave.AddSpawn( 1.0f, FVector2D( 125.0f, 550.0f ), enemyClass );
-	wave.AddSpawn( 1.0f, FVector2D( 125.0f, 250.0f ), enemyClass );
+	wave.AddSpawn( 0.0f, FVector2D( -50.0f, 400.0f ), enemyClass );
+	wave.AddSpawn( 0.2f, FVector2D( -25.0f, 430.0f ), enemyClass );
+	wave.AddSpawn( 0.2f, FVector2D( -25.0f, 370.0f ), enemyClass );
+	wave.AddSpawn( 0.4f, FVector2D(   0.0f, 460.0f ), enemyClass );
+	wave.AddSpawn( 0.4f, FVector2D(   0.0f, 340.0f ), enemyClass );
+	wave.AddSpawn( 0.6f, FVector2D(  25.0f, 490.0f ), enemyClass );
+	wave.AddSpawn( 0.6f, FVector2D(  25.0f, 310.0f ), enemyClass );
+	wave.AddSpawn( 0.8f, FVector2D(  50.0f, 520.0f ), enemyClass );
+	wave.AddSpawn( 0.8f, FVector2D(  50.0f, 280.0f ), enemyClass );
+	wave.AddSpawn( 1.0f, FVector2D(  75.0f, 550.0f ), enemyClass );
+	wave.AddSpawn( 1.0f, FVector2D(  75.0f, 250.0f ), enemyClass );
 }
 
 void ATownsendGameModeBase::SpawnWaveDiamond( EnemyWave& wave, TSubclassOf<ACylinderPawn>& outerClass, TSubclassOf<ACylinderPawn>& innerClass )
 {
-	wave.AddSpawn( 0.0f, FVector2D(   0.0f, 400.0f ), outerClass );
-	wave.AddSpawn( 0.0f, FVector2D( 100.0f, 460.0f ), outerClass );
-	wave.AddSpawn( 0.0f, FVector2D( 100.0f, 340.0f ), outerClass );
-	wave.AddSpawn( 0.0f, FVector2D( 200.0f, 520.0f ), outerClass );
-	wave.AddSpawn( 0.0f, FVector2D( 200.0f, 280.0f ), outerClass );
-	wave.AddSpawn( 0.0f, FVector2D( 300.0f, 580.0f ), outerClass );
-	wave.AddSpawn( 0.0f, FVector2D( 300.0f, 220.0f ), outerClass );
-	wave.AddSpawn( 0.0f, FVector2D( 400.0f, 520.0f ), outerClass );
-	wave.AddSpawn( 0.0f, FVector2D( 400.0f, 280.0f ), outerClass );
-	wave.AddSpawn( 0.0f, FVector2D( 500.0f, 460.0f ), outerClass );
-	wave.AddSpawn( 0.0f, FVector2D( 500.0f, 340.0f ), outerClass );
-	wave.AddSpawn( 0.0f, FVector2D( 600.0f, 400.0f ), outerClass );
-	wave.AddSpawn( 0.0f, FVector2D( 300.0f, 400.0f ), innerClass );
+	wave.AddSpawn( 0.0f, FVector2D( -300.0f, 400.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( -200.0f, 460.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( -200.0f, 340.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( -100.0f, 520.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D( -100.0f, 280.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D(    0.0f, 580.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D(    0.0f, 220.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D(  100.0f, 520.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D(  100.0f, 280.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D(  200.0f, 460.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D(  200.0f, 340.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D(  300.0f, 400.0f ), outerClass );
+	wave.AddSpawn( 0.0f, FVector2D(    0.0f, 400.0f ), innerClass );
 }
 
 
