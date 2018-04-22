@@ -74,9 +74,7 @@ float ACylinderPawn::Calculate2DPlanePositionX( float orbitDistance, float angle
 }
 
 ACylinderPawn::ACylinderPawn()
-	: m_speed( 10.0f )
-	, m_shootCooldownTimer( 0.0f )
-	, m_alive( true )
+	: m_alive( true )
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -90,6 +88,8 @@ void ACylinderPawn::BeginPlay()
 void ACylinderPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	UpdatePlayerInput();
 
 	if( !m_alive )
 	{
@@ -109,10 +109,6 @@ void ACylinderPawn::Tick(float DeltaTime)
 			SetActorHiddenInGame( false );
 		}
 	}
-
-	CalculatePlayerInputMoveVector();
-	Move( m_movement * m_speed * DeltaTime );
-	ProcessShooting( DeltaTime );
 }
 
 // Called to bind functionality to input
@@ -123,11 +119,6 @@ void ACylinderPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAxis( CYLINDERPAWN_AXIS_MOVE_X );
 	PlayerInputComponent->BindAxis( CYLINDERPAWN_AXIS_MOVE_Y );
 	PlayerInputComponent->BindAxis( CYLINDERPAWN_AXIS_SHOOT );
-}
-
-FVector2D ACylinderPawn::GetPlayerInputMoveVector() const
-{
-	return m_movement;
 }
 
 float ACylinderPawn::GetOrbitDistance() const
@@ -197,55 +188,21 @@ void ACylinderPawn::Move( const FVector2D& moveVec )
 	UpdateActorLocationFromOrbit( loc.Z );
 }
 
-void ACylinderPawn::MoveTowardsLocation( const FVector& location, float dt )
+void ACylinderPawn::MoveTowardsLocation( const FVector& location, float speed, float dt )
 {
 	FVector myLoc = GetActorLocation();
 	FVector2D travelVector = ACylinderPawn::Get2DVectorAcrossCylinder( GetOrbitDistance(), GetOrbitAngle(), myLoc.Z, location );
 	if( !travelVector.IsZero() )
 	{
-		float maxTravelDistance = m_speed * dt;
+		float maxTravelDistance = speed * dt;
 		if( travelVector.SizeSquared() >= FMath::Square( maxTravelDistance ) )
 		{
-			// Only move by the appropriate amount according to my speed.
+			// Only move by the appropriate amount according to the speed.
 			travelVector.Normalize();
 			travelVector *= maxTravelDistance;
 		}
 
 		Move( travelVector );
-	}
-}
-
-void ACylinderPawn::ShootLeft()
-{
-	Shoot( FVector2D( -1.0f, 0.0f ) );
-}
-
-void ACylinderPawn::ShootRight()
-{
-	Shoot( FVector2D( 1.0f, 0.0f ) );
-}
-
-void ACylinderPawn::Shoot( const FVector2D& shootHeading )
-{
-	if( m_bulletClass )
-	{
-		ACylinderPawn* bullet = (ACylinderPawn*) GetWorld()->SpawnActor( m_bulletClass );
-		bullet->SetLocation( m_angle, GetActorLocation().Z );
-		bullet->SetHeading( shootHeading );
-		if( UBulletComponent* bulletComp = (UBulletComponent*) bullet->FindComponentByClass( UBulletComponent::StaticClass() ) )
-		{
-			if( AController* controller = GetController() )
-			{
-				if( controller->IsPlayerController() )
-				{
-					bulletComp->SetOwningPlayer( (APlayerController*) controller );
-				}
-			}
-		}
-
-		float angle = AngleBetweenNormalisedVectors( FVector2D( 1.0f, 0.0f ), shootHeading );
-		FRotator rotation( FMath::RadiansToDegrees( angle ), 270.0f, 0.0f );
-		bullet->SetLocalRotation( rotation );
 	}
 }
 
@@ -262,23 +219,26 @@ void ACylinderPawn::OnHit( ACylinderPawn* otherPawn )
 	}
 }
 
-void ACylinderPawn::CalculatePlayerInputMoveVector()
+void ACylinderPawn::UpdatePlayerInput()
 {
 	if( InputComponent )
 	{
-		m_movement.X = InputComponent->GetAxisValue( CYLINDERPAWN_AXIS_MOVE_X );
-		m_movement.Y = InputComponent->GetAxisValue( CYLINDERPAWN_AXIS_MOVE_Y );
+		m_playerMovement.X = InputComponent->GetAxisValue( CYLINDERPAWN_AXIS_MOVE_X );
+		m_playerMovement.Y = InputComponent->GetAxisValue( CYLINDERPAWN_AXIS_MOVE_Y );
 
 		// Normalise if greater than 1.
-		float magSqr = m_movement.SizeSquared();
+		float magSqr = m_playerMovement.SizeSquared();
 		if( magSqr > 1.0f )
 		{
-			m_movement /= FMath::Sqrt( magSqr );
+			m_playerMovement /= FMath::Sqrt( magSqr );
 		}
+
+		m_playerShootAxis = InputComponent->GetAxisValue( CYLINDERPAWN_AXIS_SHOOT );
 	}
 	else
 	{
-		m_movement = FVector2D::ZeroVector;
+		m_playerMovement = FVector2D::ZeroVector;
+		m_playerShootAxis = 0.0f;
 	}
 }
 
@@ -315,36 +275,4 @@ ATownsendPlayerState* ACylinderPawn::GetPlayerState()
 		}
 	}
 	return NULL;
-}
-
-void ACylinderPawn::ProcessShooting( float dt )
-{
-	if( m_shootCooldownTimer > 0.0f )
-	{
-		m_shootCooldownTimer -= dt;
-	}
-
-	if( m_shootCooldownTimer <= 0.0f && m_fireRate > 0.0f )
-	{
-		float shootAxis = InputComponent->GetAxisValue( CYLINDERPAWN_AXIS_SHOOT );
-
-		// If we're shooting continuously, let the "overflow" time from one cooldown count towards the next.
-		// But if we stop shooting, let the cooldown sit at zero.
-		if( shootAxis == 0.0f )
-		{
-			m_shootCooldownTimer;
-		}
-		else
-		{
-			if( shootAxis > 0.0f )
-			{
-				ShootRight();
-			}
-			else //if( shootAxis < 0.0f )
-			{
-				ShootLeft();
-			}
-			m_shootCooldownTimer += 1.0f / m_fireRate;
-		}
-	}
 }
