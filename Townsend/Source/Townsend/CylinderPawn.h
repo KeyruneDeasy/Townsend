@@ -76,12 +76,13 @@ private:
 	FVector2D m_heading;
 	FRotator m_localRotation;
 
+	bool m_alive;
+
 	void UpdatePlayerInput();
 	void UpdateActorLocationFromOrbit();
 	void UpdateActorLocationFromOrbit( float z );
 	void KillPlayer();
 	void Die() { m_alive = false; }
-
-	bool m_alive;
+	void SetAngleInternal( float angle );
 };
 

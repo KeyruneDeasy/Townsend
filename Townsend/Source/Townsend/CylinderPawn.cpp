@@ -169,13 +169,13 @@ FVector2D ACylinderPawn::Get2DPlanePosition_XAsAngle() const
 
 void ACylinderPawn::SetAngle( float angle )
 {
-	m_angle = angle;
+	SetAngleInternal( angle );
 	UpdateActorLocationFromOrbit();
 }
 
 void ACylinderPawn::SetLocation( float angle, float z )
 {
-	m_angle = angle;
+	SetAngleInternal( angle );
 	UpdateActorLocationFromOrbit( z );
 }
 
@@ -184,7 +184,7 @@ void ACylinderPawn::Move( const FVector2D& moveVec )
 	float orbitDistance = GetOrbitDistance();
 	if( orbitDistance > 0.0f )
 	{
-		m_angle -= moveVec.X / orbitDistance;
+		SetAngleInternal( m_angle - moveVec.X / orbitDistance );
 	}
 
 	FVector loc = GetActorLocation();
@@ -280,4 +280,18 @@ ATownsendPlayerState* ACylinderPawn::GetPlayerState()
 		}
 	}
 	return NULL;
+}
+
+void ACylinderPawn::SetAngleInternal( float angle )
+{
+	m_angle = angle;
+	// Wrap the angle to be between 0 and 360 degrees
+	while( m_angle < 0.0f )
+	{
+		m_angle += 2 * PI;
+	}
+	while( m_angle > 2 * PI )
+	{
+		m_angle -= 2 * PI;
+	}
 }
