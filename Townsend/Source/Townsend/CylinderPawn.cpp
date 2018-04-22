@@ -84,6 +84,7 @@ float ACylinderPawn::GetOrbitDistance( UWorld* world )
 
 ACylinderPawn::ACylinderPawn()
 	: m_alive( true )
+	, m_clampZ( true )
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -189,7 +190,10 @@ void ACylinderPawn::Move( const FVector2D& moveVec )
 
 	FVector loc = GetActorLocation();
 	loc.Z += moveVec.Y;
-	loc.Z = FMath::Clamp( loc.Z, GetMinZ(), GetMaxZ() );
+	if( m_clampZ )
+	{
+		loc.Z = FMath::Clamp( loc.Z, GetMinZ(), GetMaxZ() );
+	}
 	UpdateActorLocationFromOrbit( loc.Z );
 }
 

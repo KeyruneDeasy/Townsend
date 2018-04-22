@@ -42,6 +42,14 @@ ATownsendGameModeBase::ATownsendGameModeBase()
 	}
 
 	{
+		ConstructorHelpers::FClassFinder<AActor> classFinder(TEXT("/Game/Blueprints/Enemies/ShootingEnemy"));
+		if (classFinder.Class != nullptr)
+		{
+			m_shootingEnemyClass = classFinder.Class;
+		}
+	}
+
+	{
 		ConstructorHelpers::FClassFinder<UGameOverMenu> classFinder(TEXT("/Game/Blueprints/GameOverMenu"));
 		if (classFinder.Class != nullptr)
 		{
@@ -112,6 +120,7 @@ void ATownsendGameModeBase::SpawnEnemyWave()
 	wave.SetOriginAngle( angle + angleOffset );
 
 	rand = FMath::RandRange( 0, ( (int) Wave_Count ) - 1 );
+
 	switch( (Wave) rand )
 	{
 	case Wave_HomingEnemyLine:
@@ -137,6 +146,11 @@ void ATownsendGameModeBase::SpawnEnemyWave()
 	case Wave_Diamond:
 	{
 		SpawnWaveDiamond( wave, m_homingEnemyClass, m_straightEnemyClass );
+		break;
+	}
+	case Wave_Shooters:
+	{
+		SpawnWaveLineOfThree( wave, m_shootingEnemyClass );
 		break;
 	}
 	}
@@ -186,6 +200,13 @@ void ATownsendGameModeBase::SpawnWaveDiamond( EnemyWave& wave, TSubclassOf<ACyli
 	wave.AddSpawn( 0.0f, FVector2D(  200.0f, 340.0f ), outerClass );
 	wave.AddSpawn( 0.0f, FVector2D(  300.0f, 400.0f ), outerClass );
 	wave.AddSpawn( 0.0f, FVector2D(    0.0f, 400.0f ), innerClass );
+}
+
+void ATownsendGameModeBase::SpawnWaveLineOfThree( EnemyWave& wave, TSubclassOf<ACylinderPawn>& enemyClass )
+{
+	wave.AddSpawn( 0.0f, FVector2D( 0.0f, 200.0f ), enemyClass );
+	wave.AddSpawn( 0.0f, FVector2D( 0.0f, 400.0f ), enemyClass );
+	wave.AddSpawn( 0.0f, FVector2D( 0.0f, 600.0f ), enemyClass );
 }
 
 

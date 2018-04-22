@@ -20,13 +20,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
-	virtual void BeginPlay() override;
-
-	void ShootLeft();
-	void ShootRight();
-	void Shoot( const FVector2D& shootHeading );
-
-private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf < ACylinderPawn > m_bulletClass;
 
@@ -34,6 +27,12 @@ private:
 	float m_fireRate;
 
 	float m_shootCooldownTimer;
+	virtual void BeginPlay() override;
 
+	void ShootLeft();
+	void ShootRight();
+	void Shoot( const FVector2D& shootHeading );
+
+private:
 	void ProcessShooting( float dt );
 };

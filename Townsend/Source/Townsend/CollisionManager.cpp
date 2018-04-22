@@ -30,6 +30,11 @@ void CollisionManager::RegisterCollisionComponent( UCollisionComponent* componen
 		m_playerBullets.Add( component );
 		break;
 	}
+	case CollisionType::Collision_EnemyBullet:
+	{
+		m_enemyBullets.Add( component );
+		break;
+	}
 	}
 }
 
@@ -55,6 +60,11 @@ void CollisionManager::UnregisterCollisionComponent( UCollisionComponent* compon
 		m_playerBullets.Remove( component );
 		break;
 	}
+	case CollisionType::Collision_EnemyBullet:
+	{
+		m_enemyBullets.Remove( component );
+		break;
+	}
 	}
 }
 
@@ -70,6 +80,19 @@ void CollisionManager::CheckCollisions()
 				playerHit = true;
 				m_player->OnHit( (ACylinderPawn*) enemy->GetOwner() );
 				break;
+			}
+		}
+		if( !playerHit )
+		{
+			for( auto& enemyBullet : m_enemyBullets )
+			{
+				if( enemyBullet->CollidingWith( *m_player ) )
+				{
+					playerHit = true;
+					m_player->OnHit( (ACylinderPawn*) enemyBullet->GetOwner() );
+					enemyBullet->OnHit( (ACylinderPawn*) m_player->GetOwner() );
+					break;
+				}
 			}
 		}
 	}

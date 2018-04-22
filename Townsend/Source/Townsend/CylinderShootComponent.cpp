@@ -59,6 +59,7 @@ void UCylinderShootComponent::Shoot( const FVector2D& shootHeading )
 			}
 
 			float rotationAngle = ACylinderPawn::AngleBetweenNormalisedVectors( FVector2D( 1.0f, 0.0f ), shootHeading );
+			if( shootHeading.Y < 0.0f ) { rotationAngle = -rotationAngle; }
 			FRotator rotation( FMath::RadiansToDegrees( rotationAngle ), 270.0f, 0.0f );
 			bullet->SetLocalRotation( rotation );
 		}

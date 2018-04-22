@@ -73,6 +73,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	FVector2D m_heading;
 
+	UPROPERTY(EditAnywhere)
+	bool m_clampZ;
+
 	FVector2D m_playerMovement;
 	float m_playerShootAxis;
 

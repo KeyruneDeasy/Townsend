@@ -25,6 +25,7 @@ public:
 		Wave_StraightEnemyLine,
 		Wave_StraightEnemyV,
 		Wave_Diamond,
+		Wave_Shooters,
 
 		Wave_Count
 	};
@@ -59,6 +60,7 @@ private:
 	float m_nextEnemySpawnTime;
 	TSubclassOf < ACylinderPawn > m_homingEnemyClass;
 	TSubclassOf < ACylinderPawn > m_straightEnemyClass;
+	TSubclassOf < ACylinderPawn > m_shootingEnemyClass;
 
 	uint16 m_currentLives;
 	bool m_gameOver;
@@ -74,4 +76,5 @@ private:
 	void SpawnWaveLine( EnemyWave& wave, TSubclassOf<ACylinderPawn>& enemyClass );
 	void SpawnWaveV( EnemyWave& wave, TSubclassOf<ACylinderPawn>& enemyClass );
 	void SpawnWaveDiamond( EnemyWave& wave, TSubclassOf<ACylinderPawn>& outerClass, TSubclassOf<ACylinderPawn>& innerClass );
+	void SpawnWaveLineOfThree( EnemyWave& wave, TSubclassOf<ACylinderPawn>& enemyClass );
 };
