@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "TownsendHUD.h"
+#include "PauseMenu.h"
 #include "TownsendPlayerController.generated.h"
 
 class UTownsendHUD;
@@ -17,9 +18,15 @@ class TOWNSEND_API ATownsendPlayerController : public APlayerController
 public:
 	ATownsendPlayerController();
 
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
+
+	void TogglePause();
 
 private:
-	TSubclassOf < UTownsendHUD > hudClass;
+	TSubclassOf < UTownsendHUD > m_hudClass;
 	UTownsendHUD* m_hud;
+
+	TSubclassOf < UPauseMenu > m_pauseMenuClass;
+	UPauseMenu* m_pauseMenu;
 };
