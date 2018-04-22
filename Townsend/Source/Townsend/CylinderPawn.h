@@ -70,10 +70,12 @@ private:
 	UPROPERTY(EditAnywhere)
 	float m_angle;
 
+	UPROPERTY(EditAnywhere)
+	FVector2D m_heading;
+
 	FVector2D m_playerMovement;
 	float m_playerShootAxis;
 
-	FVector2D m_heading;
 	FRotator m_localRotation;
 
 	bool m_alive;
