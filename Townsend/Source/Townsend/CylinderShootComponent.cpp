@@ -43,8 +43,8 @@ void UCylinderShootComponent::Shoot( const FVector2D& shootHeading )
 		if( m_bulletClass )
 		{
 			ACylinderPawn* bullet = (ACylinderPawn*) GetWorld()->SpawnActor( m_bulletClass );
-			float orbitAngle = owner->GetOrbitAngle();
-			float z = owner->GetActorLocation().Z;
+			float orbitAngle = owner->GetOrbitAngle() - ( m_shootLocator.X / owner->GetOrbitDistance() );
+			float z = owner->GetActorLocation().Z + m_shootLocator.Y;
 			bullet->SetLocation( orbitAngle, z );
 			bullet->SetHeading( shootHeading );
 			if( UBulletComponent* bulletComp = (UBulletComponent*) bullet->FindComponentByClass( UBulletComponent::StaticClass() ) )

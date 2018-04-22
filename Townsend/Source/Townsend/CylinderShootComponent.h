@@ -26,6 +26,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float m_fireRate;
 
+	UPROPERTY(EditAnywhere)
+	FVector2D m_shootLocator;
+
 	float m_shootCooldownTimer;
 	virtual void BeginPlay() override;
 
