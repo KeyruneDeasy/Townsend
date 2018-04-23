@@ -6,24 +6,30 @@ TownsendPlayerController
 TownsendPlayerState
 
 Actors:
-CylinderPawn - Gives the core functionality of being locked onto the game cylinder
+CylinderPawn - Has the core functionality of being locked onto the game cylinder
 CylinderOrbitCameraActor - Extends a standard CameraActor to follow the player pawn's orbit around the cylinder
 
 Components:
-BulletComponent - Identifies the owning player of a bullet
+CylinderMoveComponent - Gives a pawn the ability to move around on the game cylinder
+CylinderShootComponent - Gives a pawn the ability to shoot bullets
+AutoCylinderShootComponent - Makes a pawn automatically shoot bullets
 ChasePlayerCylinderComponent - Makes a pawn chase the player pawn
-CollisionComponent - Implements collision detection for a pawn
 CylinderConstantMoveComponent - Makes a pawn move in a continuous straight line
+CollisionComponent - Implements collision detection for a pawn
 DestroyTimerComponent - Makes a pawn die after a specified time
 ScoreValueComponent - Awards score when the pawn dies
+BulletComponent - Identifies the owning player of a bullet
 
 UI:
-GameOverMenu
-TownsendHUD
 TownsendMainMenu
+TownsendHUD
+PauseMenu
+GameOverMenu
+HighScoreMenu
 
 Misc:
 CollisionManager - Has a pointer to every CollisionComponent and does the necessary collision checks every frame
-
-
+EnemyWave - Specifies the relative positions and timings to spawn a wave of enemies
+EnemySpawn - The position and timing of a single enemy within a wave
+TownsendSaveGame - Tracks highscores, and saves and loads them from disk
 
